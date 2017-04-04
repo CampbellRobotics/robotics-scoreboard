@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Scoreboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000000;
+            overflow: none;
+            font-family: 'Ubuntu Mono', monospace;
+        }
+
+        .side {
+            display: inline-block;
+            width: 50%;
+        }
+
+        #red {
+            float: left;
+        }
+
+        #red h1 {
+            color: #ff0000;
+            text-align: center;
+            font-size: 8em;
+        }
+
+        #red h2 {
+            color: #ffffff;
+            text-align: center;
+            font-size: 3em;
+        }
+
+        #blue h1 {
+            color: #0000ff;
+            text-align: center;
+            font-size: 8em;
+        }
+
+        #blue h2 {
+            color: #ffffff;
+            text-align: center;
+            font-size: 3em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="red" class="side">
+        <h2>Left</h2>
+        <h1 id="lscore">0</h1>
+    </div>
+    <div id="blue" class="side">
+        <h2>Right</h2>
+        <h1 id="rscore">0</h1>
+    </div>
+    <p id="instructions" style="text-align: center; position: fixed; bottom: 0em; left: 0em; color: #ffffff">Press Q or A to increase/decrease on the left side. Press P or L to increase/decrease on the right. </p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+
+</html>

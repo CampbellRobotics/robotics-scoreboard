@@ -1,0 +1,38 @@
+body {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    grid-template-areas:
+        "left . right"
+        "instruct instruct instruct";
+
+    background-color: #ffffff;
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+#red {
+    grid-area: left;
+}
+
+#blue {
+    grid-area: right;
+}
+
+h1 {
+    color: #000000;
+    font-size: 8em;
+}
+
+h2 {
+    color: #000000;
+    font-size: 3em;
+}
+
+#instructions {
+    grid-area: instruct;
+    color: #ccc;
+}
+
+#instructions:hover {
+    color: #000000
+}

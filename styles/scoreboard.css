@@ -3,29 +3,58 @@ body {
     grid-template-rows: auto;
     grid-template-columns: auto;
     grid-template-areas:
-        "left . right"
-        "instruct instruct instruct";
+        "left right"
+        "instruct instruct";
 
     background-color: #ffffff;
     font-family: 'Ubuntu Mono', monospace;
 }
 
-#red {
+.score_side {
+    display: grid;
+    grid-template-areas:
+        "title"
+        "plus"
+        "number"
+        "minus";
+    text-align: center;
+}
+
+#leftscore {
     grid-area: left;
 }
 
-#blue {
+#rightscore {
     grid-area: right;
 }
 
 h1 {
+    grid-area: "number";
     color: #000000;
     font-size: 8em;
 }
 
 h2 {
+    grid-area: "title";
     color: #000000;
     font-size: 3em;
+}
+
+.button {
+    cursor: pointer;
+    user-select: none;
+}
+
+.plus {
+    grid-area: "plus";
+    color: #5a5;
+    font-size: 2em;
+}
+
+.minus {
+    grid-area: "minus";
+    color: #d55;
+    font-size: 2em;
 }
 
 #instructions {

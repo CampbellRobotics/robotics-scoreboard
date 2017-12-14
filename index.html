@@ -8,16 +8,21 @@
 </head>
 
 <body>
-    <div id="red" class="side">
+    <div id="leftscore" class="score_side" data-score-attr="left">
         <h2>Left</h2>
-        <h1 id="lscore">0</h1>
+        <div class="plus button">+</div>
+        <h1 id="lscore" data-bind="text: scores.left"></h1>
+        <div class="minus button">-</div>
     </div>
-    <div id="blue" class="side">
+    <div id="rightscore" class="score_side" data-score-attr="right">
         <h2>Right</h2>
-        <h1 id="rscore">0</h1>
+        <div class="plus button">+</div>
+        <h1 id="rscore" data-bind="text: scores.right"></h1>
+        <div class="minus button">-</div>
     </div>
     <p id="instructions">Press Q or A to increase/decrease on the left side. Press P or L to increase/decrease on the right. </p>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
     <script src="js/index.js"></script>
 </body>
 

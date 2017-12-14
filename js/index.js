@@ -11,28 +11,42 @@ var viewModel = {
 
 ko.applyBindings(viewModel);
 
+function getScore(sidename) {
+    return scores[sidename]();
+}
+
+function setScore(sidename, newValue) {
+    scores[sidename](newValue);
+}
+
 function changeScore(sidename, amountToAdd) {
-    scores[sidename](scores[sidename]() + amountToAdd);
+    setScore(sidename, getScore(sidename) + amountToAdd);
+}
+
+function clearScores() {
+    for (let side of ['left', 'right']) {
+        setScore(side, 0);
+    }
+}
+
+const keys = {
+    l: [changeScore, 'right', -1],
+    p: [changeScore, 'right', +1],
+    a: [changeScore, 'left', -1],
+    q: [changeScore, 'left', +1],
+    r: [clearScores]
 }
 
 $(window).keypress(function (key) {
-
-    if (key.which === 'p'.charCodeAt(0)) {
-        $("#rscore").html(parseInt($("#rscore").html()) + 1);
-    } else if (key.which === 'l'.charCodeAt(0)) {
-        if (!parseInt($("#rscore").html()) == 0) {
-            $("#rscore").html(parseInt($("#rscore").html()) - 1);
-        }
-    } else if (key.which === 'q'.charCodeAt(0)) {
-        $("#lscore").html(parseInt($("#lscore").html()) + 1);
-    } else if (key.which === 'a'.charCodeAt(0)) {
-        if (!parseInt($("#lscore").html()) == 0) {
-            $("#lscore").html(parseInt($("#lscore").html()) - 1);
-        }
+    let keyTuple = keys[String.fromCharCode(key.keyCode)];
+    console.log(keyTuple);
+    if (keyTuple === undefined) {
+        return;
     }
+    keyTuple[0](...keyTuple.slice(1));
 });
 
-let directions = {
+const directions = {
     plus: 1,
     minus: -1
 }

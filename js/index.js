@@ -39,7 +39,6 @@ const keys = {
 
 $(window).keypress(function (key) {
     let keyTuple = keys[String.fromCharCode(key.keyCode)];
-    console.log(keyTuple);
     if (keyTuple === undefined) {
         return;
     }

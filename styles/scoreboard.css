@@ -3,8 +3,8 @@ body {
     grid-template-rows: auto;
     grid-template-columns: auto;
     grid-template-areas:
-        "left right"
-        "instruct instruct";
+        "instruct instruct"
+        "left right";
 
     background-color: #ffffff;
     font-family: 'Ubuntu Mono', monospace;
@@ -60,8 +60,9 @@ h2 {
 #instructions {
     grid-area: instruct;
     color: #ccc;
+    text-align: center;
 }
 
 #instructions:hover {
-    color: #000000
+    color: #000000;
 }

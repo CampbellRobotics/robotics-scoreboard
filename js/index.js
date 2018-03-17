@@ -35,7 +35,7 @@ const keys = {
     a: [changeScore, 'left', -1],
     q: [changeScore, 'left', +1],
     r: [clearScores]
-}
+};
 
 $(window).keypress(function (key) {
     let keyTuple = keys[String.fromCharCode(key.keyCode)];
@@ -45,10 +45,62 @@ $(window).keypress(function (key) {
     keyTuple[0](...keyTuple.slice(1));
 });
 
+
+class Timer {
+    constructor(totalTimeSec) {
+        this.totalTimeOrig = totalTimeSec * 1000;
+        this.totalTime = totalTimeSec * 1000;
+        this.startTime = null;
+        this.stopped = true;
+    }
+
+    start() {
+        this.startTime = performance.now();
+        this.stopped = false;
+    }
+
+    stop() {
+        this.totalTime -= (this.totalTime - this.currentTime);
+        this.stopped = true;
+    }
+
+    startStop() {
+        if (this.stopped) {
+            this.start();
+        } else {
+            this.stop();
+        }
+    }
+
+    reset() {
+        this.startTime = performance.now();
+        this.totalTime = this.totalTimeOrig;
+    }
+
+    updateElem(elem) {
+        const secs = this.currentTime / 1000;
+        const min = Math.floor(secs / 60);
+        const sec = Math.floor(secs % 60);
+        elem.html(`${min}:${sec.toString().padStart(2, '0')}`);
+    }
+
+    get currentTime() {
+        if (this.stopped) {
+            return this.totalTime;
+        }
+        return (this.totalTime - (performance.now() - this.startTime));
+    }
+
+    get currentTimeSec() {
+        return this.currentTime / 1000;
+    }
+}
+
+
 const directions = {
     plus: 1,
     minus: -1
-}
+};
 
 for (let scoreSide of $('.score_side')) {
     for (let btn of $(scoreSide).find('> .button')) {
@@ -66,4 +118,40 @@ for (let scoreSide of $('.score_side')) {
             changeScore($(scoreSide).attr('data-score-attr'), direction);
         })
     }
+}
+
+const timer = new Timer(4 * 60);
+let interval = null;
+let updateTimer = Timer.prototype.updateElem.bind(timer, $('#timer_time'));
+updateTimer();
+
+for (let btn of $('#timer_start')) {
+    btn = $(btn);
+    btn.click(function (a) {
+        console.log('Timer start/stop');
+        if (timer.stopped) {
+            btn.html('Stop');
+            updateTimer();
+            interval = window.setInterval(updateTimer, 100);
+        } else {
+            btn.html('Start');
+            window.clearInterval(interval);
+            interval = null;
+        }
+        timer.startStop();
+    });
+}
+
+for (let btn of $('#timer_reset')) {
+    btn = $(btn);
+    btn.click(function (a) {
+        console.log('Timer reset');
+        timer.stop();
+        timer.reset();
+        $('#timer_start').html('Start');
+        window.clearInterval(interval);
+        interval = null;
+        updateTimer();
+        clearScores();
+    });
 }

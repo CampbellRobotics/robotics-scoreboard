@@ -3,8 +3,8 @@ body {
     grid-template-rows: auto;
     grid-template-columns: auto;
     grid-template-areas:
-        "instruct instruct"
-        "left right";
+        "instruct instruct instruct"
+        "left     time     right";
 
     background-color: #ffffff;
     font-family: 'Ubuntu Mono', monospace;
@@ -20,6 +20,23 @@ body {
     text-align: center;
 }
 
+#timer {
+    display: grid;
+    grid-template-areas:
+        "empty empty"
+        "time  time"
+        "start reset";
+    text-align: center;
+}
+
+#timer_start {
+    grid-area: start;
+}
+
+#timer_reset {
+    grid-area: reset;
+}
+
 #leftscore {
     grid-area: left;
 }
@@ -29,9 +46,16 @@ body {
 }
 
 h1 {
-    grid-area: "number";
     color: #000000;
     font-size: 8em;
+}
+
+h1#timer_time {
+    grid-area: time;
+}
+
+h1.score {
+    grid-area: "number";
 }
 
 h2 {

@@ -1,5 +1,65 @@
 'use strict';
 
+let useAudio = true;
+
+function doSeriesInt(synth, atTime, series) {
+    let part = new Tone.Part(function (time, event) {
+        synth.triggerAttackRelease(event.note, event.dur, time);
+    }, series);
+    part.start(atTime);
+}
+
+function setupAudioCues() {
+    let synth = new Tone.Synth().toMaster();
+    let doSeries = doSeriesInt.bind(null, synth);
+
+    
+    doSeries(0, [
+        {time: 0, note: 'F#4', dur: '8n'},
+        {time: 1, note: 'Bb4', dur: '16n'},
+        {time: 2, note: 'C#5', dur: '16n'},
+        {time: 3, note: 'F#5', dur: '4n'},
+    ]);
+
+    doSeries(64, [
+        {time: 0, note: 'G4', dur: '8n'},
+        {time: '4n', note: 'E4', dur: '16n'},
+    ]);
+
+    doSeries(124, [
+        {time: 0, note: 'G4', dur: '8n'},
+        {time: '4n', note: 'D4', dur: '16n'},
+    ]);
+
+
+    doSeries(184, [
+        {time: 0, note: 'G4', dur: '8n'},
+        {time: '4n', note: 'C4', dur: '16n'},
+    ]);
+
+
+    doSeries(244, [
+        {time: 0, note: 'C3', dur: '2n'},
+        {time: '16n', note: 'Eb3', dur: '2n'},
+        {time: '8n', note: 'F#3', dur: '2n'},
+    ]);
+}
+
+setupAudioCues();
+
+function startAudio () {
+    stopAudio();
+    Tone.Transport.start('+0.1');
+};
+
+function stopAudio () {
+    Tone.Transport.stop();
+};
+
+function pauseAudio () {
+    Tone.Transport.pause();
+};
+
 var scores = {
     left: ko.observable(0),
     right: ko.observable(0)
@@ -115,6 +175,7 @@ for (let scoreSide of $('.score_side')) {
 const timer = new Timer(4 * 60);
 let interval = null;
 let updateTimer = Timer.prototype.updateElem.bind(timer, $('#timer_time'));
+let startStopTimer = Timer.prototype.startStop.bind(timer);
 updateTimer();
 
 function timerStartStop (btn) {
@@ -123,13 +184,20 @@ function timerStartStop (btn) {
         btn.html('Stop');
         updateTimer();
         interval = window.setInterval(updateTimer, 100);
+        if (timer.currentTimeSec === 4*60) {
+            // just got reset
+            Tone.Transport.schedule(startStopTimer, 4);
+        } else {
+            startStopTimer();
+        }
+        Tone.Transport.start();
     } else {
         btn.html('Start');
         window.clearInterval(interval);
         interval = null;
+        timer.startStop();
+        Tone.Transport.pause();
     }
-    timer.startStop();
-
 }
 
 function resetRound (startBtn) {
@@ -140,6 +208,9 @@ function resetRound (startBtn) {
     window.clearInterval(interval);
     interval = null;
     updateTimer();
+    stopAudio();
+    Tone.Transport.cancel();
+    setupAudioCues();
     clearScores();
 }
 

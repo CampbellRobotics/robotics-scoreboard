@@ -157,6 +157,6 @@ const keys = {
     p: [changeScore, 'right', +1],
     a: [changeScore, 'left', -1],
     q: [changeScore, 'left', +1],
-    r: [resetRound],
+    r: [resetRound, $('#timer_start')],
     [' ']: [timerStartStop, $('#timer_start')],
 };

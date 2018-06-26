@@ -140,7 +140,8 @@ class Timer {
         if (this.stopped) {
             return this.totalTime;
         }
-        return (this.totalTime - (performance.now() - this.startTime));
+        let t = (this.totalTime - (performance.now() - this.startTime));
+        return t > 0 ? t : 0;
     }
 
     get currentTimeSec() {

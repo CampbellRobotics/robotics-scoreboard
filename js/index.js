@@ -29,14 +29,6 @@ function clearScores() {
     }
 }
 
-const keys = {
-    l: [changeScore, 'right', -1],
-    p: [changeScore, 'right', +1],
-    a: [changeScore, 'left', -1],
-    q: [changeScore, 'left', +1],
-    r: [clearScores]
-};
-
 $(window).keypress(function (key) {
     let keyTuple = keys[String.fromCharCode(key.keyCode)];
     if (keyTuple === undefined) {
@@ -116,7 +108,7 @@ for (let scoreSide of $('.score_side')) {
                 return;
             }
             changeScore($(scoreSide).attr('data-score-attr'), direction);
-        })
+        });
     }
 }
 
@@ -125,33 +117,46 @@ let interval = null;
 let updateTimer = Timer.prototype.updateElem.bind(timer, $('#timer_time'));
 updateTimer();
 
-for (let btn of $('#timer_start')) {
-    btn = $(btn);
-    btn.click(function (a) {
-        console.log('Timer start/stop');
-        if (timer.stopped) {
-            btn.html('Stop');
-            updateTimer();
-            interval = window.setInterval(updateTimer, 100);
-        } else {
-            btn.html('Start');
-            window.clearInterval(interval);
-            interval = null;
-        }
-        timer.startStop();
-    });
-}
-
-for (let btn of $('#timer_reset')) {
-    btn = $(btn);
-    btn.click(function (a) {
-        console.log('Timer reset');
-        timer.stop();
-        timer.reset();
-        $('#timer_start').html('Start');
+function timerStartStop (btn) {
+    console.log('Timer start/stop');
+    if (timer.stopped) {
+        btn.html('Stop');
+        updateTimer();
+        interval = window.setInterval(updateTimer, 100);
+    } else {
+        btn.html('Start');
         window.clearInterval(interval);
         interval = null;
-        updateTimer();
-        clearScores();
-    });
+    }
+    timer.startStop();
+
 }
+
+function resetRound (startBtn) {
+    console.log('Timer reset');
+    timer.stop();
+    timer.reset();
+    startBtn.html('Start');
+    window.clearInterval(interval);
+    interval = null;
+    updateTimer();
+    clearScores();
+}
+
+for (let btn of $('#timer_start')) {
+    btn = $(btn);
+    btn.click(timerStartStop.bind(Object, btn));
+    for (let resetBtn of $('#timer_reset')) {
+        resetBtn = $(resetBtn);
+        resetBtn.click(resetRound.bind(Object, btn));
+    }
+}
+
+const keys = {
+    l: [changeScore, 'right', -1],
+    p: [changeScore, 'right', +1],
+    a: [changeScore, 'left', -1],
+    q: [changeScore, 'left', +1],
+    r: [resetRound],
+    [' ']: [timerStartStop, $('#timer_start')],
+};

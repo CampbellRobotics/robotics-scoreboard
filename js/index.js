@@ -22,13 +22,55 @@ function clamp(n, min, max) {
     return n;
 }
 
+const startSeries = [
+    { time: 0, note: 'F#4', dur: '8n' },
+    { time: 1, note: 'Bb4', dur: '16n' },
+    { time: 2, note: 'C#5', dur: '16n' },
+    { time: 3, note: 'F#5', dur: '4n' },
+];
+
+function noteLen(note, bpm = 120) {
+    if (typeof (note) === 'number') {
+        return note;
+    } else {
+        return (60 / bpm) / (4 / parseInt(note));
+    }
+}
+
+function seqLength(seq) {
+    return seq.reduce((accu, note) => Math.max(accu, noteLen(note.time)), 0);
+}
+const startSeriesTime = seqLength(startSeries);
+
+const minuteSeries = [
+    [
+        { time: 0, note: 'G4', dur: '8n' },
+        { time: '4n', note: 'E4', dur: '16n' }
+    ],
+    [
+        { time: 0, note: 'G4', dur: '8n' },
+        { time: '4n', note: 'D4', dur: '16n' },
+    ],
+    [
+        { time: 0, note: 'G4', dur: '8n' },
+        { time: '4n', note: 'C4', dur: '16n' },
+    ],
+];
+
+const endSeries = [
+    { time: 0, note: 'C3', dur: '2n' },
+    { time: '16n', note: 'Eb3', dur: '2n' },
+    { time: '8n', note: 'F#3', dur: '2n' },
+];
+
 class Clock {
     constructor(timerLength, clockElem, startBtn) {
+        console.assert(timerLength > 0, 'got matchLenSeconds less than zero!');
         this.timerLength = timerLength;
         this.clockElem = clockElem;
         this.startBtn = startBtn;
-        console.assert(this.timerLength > 0, 'got matchLenSeconds less than zero!');
         this._setupAudioCues();
+        this.updateTimer();
     }
 
     startStop() {
@@ -46,6 +88,7 @@ class Clock {
     reset() {
         this.stop();
         Tone.Transport.seconds = 0;
+        this.startBtn.html('Start');
         this.updateTimer();
     }
 
@@ -58,62 +101,45 @@ class Clock {
     }
 
     getRemainingMatchTime() {
-        const raw = (this.timerLength - Tone.Transport.getSecondsAtTime());
-        return clamp(raw, 0, matchLen);
+        const raw = (this.timerLength + startSeriesTime - Tone.Transport.getSecondsAtTime());
+        console.log(raw);
+        return Math.max(raw, 0);
+    }
+
+    getClockDisplay() {
+        const secs = this.getRemainingMatchTime();
+        if (secs > this.timerLength) {
+            return `+ ${(secs - this.timerLength).toFixed(1)}`;
+        }
+        const min = Math.floor(secs / 60);
+        const sec = Math.floor(secs % 60);
+        return `${min}:${sec.toString().padStart(2, '0')}`;
     }
 
     updateTimer() {
-        const secs = this.getRemainingMatchTime();
-        const min = Math.floor(secs / 60);
-        const sec = Math.floor(secs % 60);
-        this.clockElem.html(`${min}:${sec.toString().padStart(2, '0')}`);
+        this.clockElem.html(this.getClockDisplay());
     }
 
     _setupAudioCues() {
         let synth = new Tone.Synth().toMaster();
         let addSeries = addSeriesToSynth.bind(null, synth);
 
-        const startSeries = [
-            { time: 0, note: 'F#4', dur: '8n' },
-            { time: 1, note: 'Bb4', dur: '16n' },
-            { time: 2, note: 'C#5', dur: '16n' },
-            { time: 3, note: 'F#5', dur: '4n' },
-        ];
-
-        // add one because we are counting from zero
-        const startSeriesTime = startSeries.reduce((accu, second) => Math.max(accu, second.time), 0) + 1;
-
-        const minuteSeries = [
-            [
-                { time: 0, note: 'G4', dur: '8n' },
-                { time: '4n', note: 'E4', dur: '16n' }
-            ],
-            [
-                { time: 0, note: 'G4', dur: '8n' },
-                { time: '4n', note: 'D4', dur: '16n' },
-            ],
-            [
-                { time: 0, note: 'G4', dur: '8n' },
-                { time: '4n', note: 'C4', dur: '16n' },
-            ],
-        ];
-
-        const endSeries = [
-            { time: 0, note: 'C3', dur: '2n' },
-            { time: '16n', note: 'Eb3', dur: '2n' },
-            { time: '8n', note: 'F#3', dur: '2n' },
-        ];
-
         Tone.Transport.scheduleRepeat(this.updateTimer.bind(this), '0.1s', '0s', this.timerLength.toString() + 's');
         addSeries(0, startSeries);
 
         // one minute is subtracted because we want to play an endSeries on 0:00
         // instead of a minuteSeries
+
+        // note: this calculation breaks match times in fractional minutes somewhat
+        // example: timerLength = 195 (3:15), it will ring at 2:15, not 3:00 or 2:00.
         for (let min = 1; min < Math.floor(this.timerLength / 60) - 1; ++min) {
-            addSeries(60 * min + startSeriesTime, minuteSeries[min % minuteSeries.length]);
+            let theSeries = minuteSeries[min % minuteSeries.length];
+            let time = 60 * min + startSeriesTime - seqLength(theSeries);
+            console.log(time)
+            addSeries(time, theSeries);
         }
 
-        addSeries(this.timerLength + startSeriesTime, endSeries);
+        addSeries(this.timerLength + startSeriesTime - seqLength(endSeries), endSeries);
     }
 }
 

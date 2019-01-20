@@ -49,9 +49,12 @@ const minuteSeries = [
 ];
 
 const endSeries = [
-    { time: 0, note: 'C3', dur: '2n' },
-    { time: '16n', note: 'Eb3', dur: '2n' },
-    { time: '8n', note: 'F#3', dur: '2n' },
+    { time: 0, note: 'G3', dur: '2n' },
+    { time: 1, note: 'F#3', dur: '2n' },
+    { time: 2, note: 'F3', dur: '2n' },
+    { time: 3, note: 'E3', dur: '2n' },
+    { time: 4, note: 'D#3', dur: '16n' },
+    { time: 4.125, note: 'D#3', dur: '16n' },
 ];
 
 class Clock {
@@ -129,7 +132,7 @@ class Clock {
             addSeries(time, theSeries);
         }
 
-        addSeries(this.timerLength + startSeriesTime - seqLength(endSeries), endSeries);
+        addSeries(this.timerLength + startSeriesTime - 5, endSeries);
     }
 }
 

@@ -93,7 +93,6 @@ class Clock {
 
     getRemainingMatchTime() {
         const raw = (this.timerLength + startSeriesTime - Tone.Transport.getSecondsAtTime());
-        console.log(raw);
         return Math.max(raw, 0);
     }
 
@@ -123,9 +122,10 @@ class Clock {
 
         // note: this calculation breaks match times in fractional minutes somewhat
         // example: timerLength = 195 (3:15), it will ring at 2:15, not 3:00 or 2:00.
-        for (let min = 1; min < Math.floor(this.timerLength / 60) - 1; ++min) {
+        for (let min = 1; min < Math.floor(this.timerLength / 60); ++min) {
             let theSeries = minuteSeries[min % minuteSeries.length];
             let time = 60 * min + startSeriesTime - seqLength(theSeries);
+            console.log(`Cue at ${time}`);
             addSeries(time, theSeries);
         }
 

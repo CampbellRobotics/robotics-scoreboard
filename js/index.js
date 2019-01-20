@@ -2,8 +2,8 @@
 /*jshint globalstrict: true*/
 
 let useAudio = true;
-// 4 minutes
-let matchLen = 4 * 60;
+// 3 minutes
+let matchLen = 3 * 60;
 
 function addSeriesToSynth(synth, atTime, series) {
     if (!useAudio) { return; }

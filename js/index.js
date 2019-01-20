@@ -13,15 +13,6 @@ function addSeriesToSynth(synth, atTime, series) {
     part.start(atTime);
 }
 
-function clamp(n, min, max) {
-    if (n < min) {
-        return min;
-    } else if (n > max) {
-        return max;
-    }
-    return n;
-}
-
 const startSeries = [
     { time: 0, note: 'F#4', dur: '8n' },
     { time: 1, note: 'Bb4', dur: '16n' },
@@ -124,7 +115,7 @@ class Clock {
         let synth = new Tone.Synth().toMaster();
         let addSeries = addSeriesToSynth.bind(null, synth);
 
-        Tone.Transport.scheduleRepeat(this.updateTimer.bind(this), '0.1s', '0s', this.timerLength.toString() + startSeriesTime + 1 + 's');
+        Tone.Transport.scheduleRepeat(this.updateTimer.bind(this), '0.1s');
         addSeries(0, startSeries);
 
         // one minute is subtracted because we want to play an endSeries on 0:00
@@ -135,7 +126,6 @@ class Clock {
         for (let min = 1; min < Math.floor(this.timerLength / 60) - 1; ++min) {
             let theSeries = minuteSeries[min % minuteSeries.length];
             let time = 60 * min + startSeriesTime - seqLength(theSeries);
-            console.log(time)
             addSeries(time, theSeries);
         }
 

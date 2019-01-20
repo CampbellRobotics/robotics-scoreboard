@@ -124,7 +124,7 @@ class Clock {
         let synth = new Tone.Synth().toMaster();
         let addSeries = addSeriesToSynth.bind(null, synth);
 
-        Tone.Transport.scheduleRepeat(this.updateTimer.bind(this), '0.1s', '0s', this.timerLength.toString() + 's');
+        Tone.Transport.scheduleRepeat(this.updateTimer.bind(this), '0.1s', '0s', this.timerLength.toString() + startSeriesTime + 1 + 's');
         addSeries(0, startSeries);
 
         // one minute is subtracted because we want to play an endSeries on 0:00

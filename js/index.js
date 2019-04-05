@@ -223,8 +223,6 @@ const keys = {
 };
 
 function hide() {
-
-    $('#leftscore').toggle();
-    $('#rightscore').toggle();
-
+    let obj = $('#main_container');
+    obj.attr('data-no-scores', obj.attr('data-no-scores') === undefined ? '' : null);
 }

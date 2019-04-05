@@ -221,3 +221,8 @@ const keys = {
     r: [resetRound],
     [' ']: [clock.startStop.bind(clock)],
 };
+
+function hide() {
+    let obj = $('#main_container');
+    obj.attr('data-no-scores', obj.attr('data-no-scores') === undefined ? '' : null);
+}

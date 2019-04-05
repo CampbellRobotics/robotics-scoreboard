@@ -4,7 +4,8 @@ body {
     grid-template-columns: auto;
     grid-template-areas:
         "instruct instruct instruct"
-        "left     time     right";
+        "left     time     right"
+        ".    check    . ";
 
     background-color: #ffffff;
     font-family: 'Ubuntu Mono', monospace;
@@ -22,6 +23,7 @@ body {
 
 #timer {
     display: grid;
+    grid-area: time;
     grid-template-areas:
         "empty empty"
         "time  time"
@@ -52,6 +54,7 @@ h1 {
 
 h1#timer_time {
     grid-area: time;
+    font-size: 10em;
 }
 
 h1.score {
@@ -85,8 +88,24 @@ h2 {
     grid-area: instruct;
     color: #ccc;
     text-align: center;
+    transition: .2s;
+    -moz-transition: .2s;
+    -webkit-transition: .2s;
+    -o-transition: .2s
 }
 
 #instructions:hover {
     color: #000000;
+    transition: .2s;
+    -moz-transition: .2s;
+    -webkit-transition: .2s;
+    -o-transition: .2s
+}
+
+#check {
+
+    grid-area: check;
+    text-align: center;
+    padding-top: 5vh
+
 }

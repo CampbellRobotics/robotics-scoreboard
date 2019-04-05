@@ -221,3 +221,10 @@ const keys = {
     r: [resetRound],
     [' ']: [clock.startStop.bind(clock)],
 };
+
+function hide() {
+
+    $('#leftscore').toggle();
+    $('#rightscore').toggle();
+
+}

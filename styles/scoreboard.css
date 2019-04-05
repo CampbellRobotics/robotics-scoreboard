@@ -11,6 +11,21 @@ body {
     font-family: 'Ubuntu Mono', monospace;
 }
 
+[data-no-scores] {
+    grid-template-areas:
+        "instruct"
+        "time"
+        "check";
+}
+
+[data-no-scores] > * > h1#timer_time {
+    font-size: 17em;
+}
+
+[data-no-scores] > .score_side {
+    display: none;
+}
+
 .score_side {
     display: grid;
     grid-template-areas:

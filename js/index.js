@@ -2,8 +2,22 @@
 /*jshint globalstrict: true*/
 
 let useAudio = true;
-// 3 minutes
-let matchLen = 3 * 60;
+const DEFAULT_MATCH_LEN = 180;
+
+function getMatchLenFromUrl() {
+    const hashPart = document.location.hash;
+    if (!hashPart.startsWith('#')) {
+        return DEFAULT_MATCH_LEN;
+    }
+    const re = /\#t=([0-9]+)/;
+    const matches = re.exec(hashPart);
+    if (matches === null || matches[1] === undefined) {
+        return DEFAULT_MATCH_LEN;
+    }
+    return parseInt(matches[1]);
+}
+
+let matchLen = getMatchLenFromUrl();
 
 function addSeriesToSynth(synth, atTime, series) {
     if (!useAudio) { return; }
@@ -45,6 +59,10 @@ const minuteSeries = [
     [
         { time: 0, note: 'G4', dur: '8n' },
         { time: '4n', note: 'C4', dur: '16n' },
+    ],
+    [
+        { time: 0, note: 'G4', dur: '8n' },
+        { time: '4n', note: 'B3', dur: '16n' },
     ],
 ];
 
